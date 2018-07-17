@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.2/angular-animate.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+
+ <body ng-app='TwitchApp' ng-controller='myCtrl'>
+  <div>
+    <h1 title='Click to reload the list of the streamers'>TWITCH STREAMERS</h1>
+    <ul id='buttons'>
+      <li id='all' class='active'><div></div>All</li>
+      <li id='online'><div></div>Online</li>
+      <li id='offline'><div></div>Offline</li>
+    </ul>
+    <table rules='rows' ng-repeat="result in results | orderBy:'name'">
+      <tr>
+        <td id='logo'><img ng-src="{{result.logo}}" alt='logo'></td>
+        <td id='name'><a ng-href='{{result.href}}' target="_blank">{{result.name}}</a></td>
+        <td id='status'>{{result.status}}</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
