@@ -1,56 +1,88 @@
-var app = angular.module('TwitchApp', ['ngAnimate']);
+var app = angular.module('TwitchApp', []);
 app.controller('myCtrl', function($scope, $http) {
-  $("li div:first").css('background', '#0C1b53');
-  $("li div:odd").css('background', 'green');
+  //массив с результатами
   $scope.results = [];
-  var streamers = ["freecodecamp", "ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"]; 
-  var twitch = 'https://wind-bow.glitch.me/twitch-api/users/';
-  var twitchStream = 'https://wind-bow.glitch.me/twitch-api/streams/';
-  var i=0;
-  function stream() {
-    var url = twitch+streamers[i];
-    var urlStream = twitchStream+streamers[i];
-    $http.get(urlStream)
+  //переменная для запрета перезагрузки данных в процессе их загрузки
+  let check = false;
+  //массив с именами стримеров
+  const streamers = ["freecodecamp", "ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"]; 
+  //функция загрузки данных
+  function getData() {
+    //запрещаем нажимать кнопку(звголовок) для перезагрузки данных
+    check = !check;
+    streamers.forEach(function(streamer) { 
+      let url = 'https://wind-bow.glitch.me/twitch-api/streams/'+streamer;
+      $http.get(url)
       .success(function(data) {
-      $('tr').css('background', 'green').addClass('online');
-      if (data.stream!==null) {
-        var dataStream = data.stream.channel;
-        $scope.results.push({name: dataStream.display_name, logo: dataStream.logo, href: dataStream.url, status: dataStream.game +': '+dataStream.status});
-      } else {$http.get(url)
-      .success(function(data1) {
-       $scope.results.push({name: data1.display_name, logo: data1.logo, href: 'https://www.twitch.tv/'+data1.name, status: 'Offline'});
-        });
-       }
-     });   
-    if (i<streamers.length-1) {
-      i++;
-      stream();
-    } else {
-      i=0;
+        //если стрим активный, добавляем его в таблицу
+        if (data.stream) { 
+          let stream = data.stream.channel;
+          $scope.results.push({name: stream.display_name, logo: stream.logo, href: stream.url, status: stream.game +': '+stream.status});
+          //передаем длину массива в функцию для проверки, можно ли активировать заг
+          checked($scope.results.length);
+          //выделяем зеленым активный стрим
+          green($('#status'));
+        } else {
+          //если стрим неактивный, ищем стример по другой ссылке
+          getOffline(streamer);
+        }
+      });
+    })
+  };
+  //функция по которой ищем данные о неактивных стримерах
+  function getOffline(streamer) {
+      let url = 'https://wind-bow.glitch.me/twitch-api/users/'+streamer; 
+      $http.get(url)
+          .success(function(data) {
+           $scope.results.push({name: data.display_name, logo: data.logo, href: 'https://www.twitch.tv/'+data.name, status: 'Offline'});
+        //передаем длину массива в функцию для проверки, можно ли активировать заг
+        checked($scope.results.length);
+        //выделяем зеленым активный стрим
+        green($('#status'));
+       });
+  }
+  //функция выделения зеленым активных стримов
+  function green(status) {
+    console.log(status.text())
+    if(status.text() && status.text()!=='Offline') {
+      status.parent().addClass('green');
     }
   }
-  stream();
+  //после загрузки всех данных разрешаем перезагружать данные
+  function checked(length) {
+    if (length === streamers.length){
+      check = !check;
+    }
+  }
+  getData();
+  //перезагружаем данные при нажатии на заголовок
   $('h1').on('click', function(){
-    $('table').hide();
-    stream();
-    $('#online, #offline').removeClass('active');
-    $('#all').addClass('active');
+    if (!check) {
+      $scope.results = [];
+      getData();
+      $('li').removeClass('active');
+      $('#all').addClass('active');
+    }
   });
+  //функции пеерключения между вкладками
+  //показываем всех стримеров
   $('#all').on('click', function() {
-    $(this).addClass('active');
-    $('#online, #offline').removeClass('active');
-    $('tr').show('slow');
+    $('li').removeClass('active');
+    $(this).addClass('active');  
+    $('tr').show();
   });
+  //показываем только тех стримеров, которые онлайн
   $('#online').on('click', function(){
+    $('li').removeClass('active');
     $(this).addClass('active');
-    $('#all, #offline').removeClass('active');
-    $('tr').show('slow');
-    $('tr:not([class="online"])').hide();
+    $('tr').show();
+    $('tr:not([class="green"])').hide();
   });
+  //опказываем только тех, кто оффлайн
   $('#offline').on('click', function(){
+    $('li').removeClass('active');
     $(this).addClass('active');
-    $('#all, #online').removeClass('active');
     $('tr').hide();
-    $('tr:not([class="online"])').show('slow');
+    $('tr:not([class="green"])').show();
   });
 });
