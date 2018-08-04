@@ -3,26 +3,25 @@
 <html>
   <head>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
     <script src="script.js"></script>
   </head>
 
- <body ng-app='TwitchApp' ng-controller='myCtrl'>
-  <div id='main'>
-    <h1 title='Click to reload the list of the streamers'>TWITCH STREAMERS</h1>
-    <ul id='buttons'>
-      <li id='all' class='active'><div></div>All</li>
-      <li id='online'><div class='green'></div>Online</li>
-      <li id='offline'><div class='lightBlue'></div>Offline</li>
-    </ul>
-    <table rules='rows' ng-repeat="result in results | orderBy:'name'">
-      <tr>
-        <td id='logo'><img ng-src="{{result.logo}}" alt='logo'></td>
-        <td id='name'><a ng-href='{{result.href}}' target="_blank">{{result.name}}</a></td>
-        <td id='status'>{{result.status}}</td>
-      </tr>
-    </table>
-  </div>
-</body>
+	<body ng-app='TwitchApp' ng-controller='myCtrl'>
+	  <div id='main'>
+	    <h1 title='Click to reload the list of the streamers' ng-click='reload()'>TWITCH STREAMERS</h1>
+	    <ul id='buttons'>
+	      <li id='all' ng-class='{active: allClick}' ng-click='all()'><div></div>All</li>
+	      <li id='online' ng-class='{active: onClick}' ng-click='online()'><div class='green'></div>Online</li>
+	      <li id='offline' ng-class='{active: offClick}' ng-click='offline()'><div class='lightBlue'></div>Offline</li>
+	    </ul>
+	    <table rules='rows' border="1" bordercolor='white' ng-repeat="result in results | orderBy:'name'">
+	      <tr ng-class='{green: result.status!=="Offline"}' ng-show='allClick ? allClick : (onClick && result.status!=="Offline") ? onClick : (offClick && result.status=="Offline") ? offClick: false'>
+	        <td id='logo'><img ng-src="{{result.logo}}" alt='logo'></td>
+	        <td id='name'><a ng-href='{{result.href}}' target="_blank">{{result.name}}</a></td>
+	        <td id='status'>{{result.status}}</td>
+	      </tr>
+	    </table>
+	  </div>
+	</body>
 </html>
