@@ -1,6 +1,10 @@
 var app = angular.module('TwitchApp', []);
 app.controller('myCtrl', function($scope, $http) {
-  //массив с результатами
+  //данные об активных и неактивных вкладках
+  $scope.allClick = true;
+  $scope.onClick = false;
+  $scope.offClick = false;
+  //массив с будущими результатами
   $scope.results = [];
   //переменная для запрета перезагрузки данных в процессе их загрузки
   let check = false;
@@ -10,44 +14,27 @@ app.controller('myCtrl', function($scope, $http) {
   function getData() {
     //запрещаем нажимать кнопку(звголовок) для перезагрузки данных
     check = !check;
+    //загружаем данные со ссылки по стримерам
     streamers.forEach(function(streamer) { 
-      let url = 'https://wind-bow.glitch.me/twitch-api/streams/'+streamer;
-      $http.get(url)
+      $http.get('https://wind-bow.glitch.me/twitch-api/streams/'+streamer)
       .success(function(data) {
-        //если стрим активный, добавляем его в таблицу
+        let status;
+        //если стример онлайн, запоминаем его игру
         if (data.stream) { 
           let stream = data.stream.channel;
-          $scope.results.push({name: stream.display_name, logo: stream.logo, href: stream.url, status: stream.game +': '+stream.status});
-          //передаем длину массива в функцию для проверки, можно ли активировать заг
-          checked($scope.results.length);
-          //выделяем зеленым активный стрим
-          green($('#status'));
-        } else {
-          //если стрим неактивный, ищем стример по другой ссылке
-          getOffline(streamer);
+          status= stream.game +': '+stream.status;
         }
+        //берем остальную информауию по стримеру
+        $http.get('https://wind-bow.glitch.me/twitch-api/users/'+streamer)
+         .success(function(results) {
+          //заносим все данные по стримеру в массив
+          $scope.results.push({name: results.display_name, logo: results.logo, href: 'https://www.twitch.tv/'+ results.name, status: (status) ?status :'Offline'});
+          //говорим кнопке о том, что можно включаться
+          checked($scope.results.length);
+         }); 
       });
-    })
+    });
   };
-  //функция по которой ищем данные о неактивных стримерах
-  function getOffline(streamer) {
-      let url = 'https://wind-bow.glitch.me/twitch-api/users/'+streamer; 
-      $http.get(url)
-          .success(function(data) {
-           $scope.results.push({name: data.display_name, logo: data.logo, href: 'https://www.twitch.tv/'+data.name, status: 'Offline'});
-        //передаем длину массива в функцию для проверки, можно ли активировать заг
-        checked($scope.results.length);
-        //выделяем зеленым активный стрим
-        green($('#status'));
-       });
-  }
-  //функция выделения зеленым активных стримов
-  function green(status) {
-    console.log(status.text())
-    if(status.text() && status.text()!=='Offline') {
-      status.parent().addClass('green');
-    }
-  }
   //после загрузки всех данных разрешаем перезагружать данные
   function checked(length) {
     if (length === streamers.length){
@@ -56,33 +43,32 @@ app.controller('myCtrl', function($scope, $http) {
   }
   getData();
   //перезагружаем данные при нажатии на заголовок
-  $('h1').on('click', function(){
+  $scope.reload = () => {
     if (!check) {
       $scope.results = [];
       getData();
-      $('li').removeClass('active');
-      $('#all').addClass('active');
+      $scope.allClick = true;
+      $scope.onClick = false;
+      $scope.offClick = false; 
     }
-  });
-  //функции пеерключения между вкладками
+  };
+  //переключения между вкладками
   //показываем всех стримеров
-  $('#all').on('click', function() {
-    $('li').removeClass('active');
-    $(this).addClass('active');  
-    $('tr').show();
-  });
+  $scope.all = () => {
+    $scope.allClick = true;
+    $scope.onClick = false;
+    $scope.offClick = false; 
+  };
   //показываем только тех стримеров, которые онлайн
-  $('#online').on('click', function(){
-    $('li').removeClass('active');
-    $(this).addClass('active');
-    $('tr').show();
-    $('tr:not([class="green"])').hide();
-  });
+  $scope.online = () => {
+    $scope.allClick = false;
+    $scope.onClick = true;
+    $scope.offClick = false;
+  };
   //опказываем только тех, кто оффлайн
-  $('#offline').on('click', function(){
-    $('li').removeClass('active');
-    $(this).addClass('active');
-    $('tr').hide();
-    $('tr:not([class="green"])').show();
-  });
+  $scope.offline = () => {
+    $scope.allClick = false;
+    $scope.onClick = false;
+    $scope.offClick = true;
+  };
 });
