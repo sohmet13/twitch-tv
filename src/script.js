@@ -1,3 +1,7 @@
+import angular from 'angular';
+
+import './style.scss';
+
 var app = angular.module('TwitchApp', []);
 app.controller('myCtrl', function($scope, $http) {
   //данные об активных и неактивных вкладках
