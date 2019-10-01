@@ -7,7 +7,7 @@
 
 	<body ng-app='TwitchApp' ng-controller='myCtrl'>
 	  <div class='twitch'>
-	    <h1 class="twitch__header" title='Click to reload the list of the streamers' ng-click='reload()'>TWITCH STREAMERS</h1>
+	    <h1 class="twitch__header" title='Click to reload the list of the streamers' ng-click='reload()'>{{title}}</h1>
 	    <ul class='tabs'>
 	      <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "all"}' ng-click='activeTab = "all"'>
 			  <div class="tabs__icon"></div>
@@ -24,7 +24,7 @@
 	    </ul>
 	    <table class="table" rules='rows' border="1" bordercolor='white' ng-repeat="result in results | orderBy:'name'">
 	      <tr ng-class='{table__item_green: result.status !== "Offline"}'
-			  ng-show='activeTab === "all" || (activeTab === "on" && result.status !== "Offline") || (activeTab === "off" && result.status === "Offline")'>
+			  ng-show='result && (activeTab === "all" || (activeTab === "on" && result.status !== "Offline") || (activeTab === "off" && result.status === "Offline"))'>
 	        <td class='table__logo'>
 				<img class="table__img" ng-src="{{result.logo}}" alt='logo'>
 			</td>

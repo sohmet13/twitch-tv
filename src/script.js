@@ -6,6 +6,8 @@ import './style.scss';
 
 const app = angular.module('TwitchApp', []);
 app.controller('myCtrl', ($scope, $http) => {
+  const loading = 'Loading...';
+  $scope.title = loading;
   //массив с будущими результатами
   $scope.results = [];
   $scope.activeTab = "all";
@@ -16,6 +18,7 @@ app.controller('myCtrl', ($scope, $http) => {
   //перезагружаем данные при нажатии на заголовок
   $scope.reload = () => {
     if ($scope.results.length === streamers.length) {
+      $scope.title = loading;
       $scope.results = [];
       streamers.forEach(getStreamers);
       $scope.activeTab = 'all';
@@ -39,6 +42,12 @@ app.controller('myCtrl', ($scope, $http) => {
         const errorText = `Can't get information about streamer ${streamer}`;
         alert(errorText);
         console.warn(errorText);
+        $scope.results.push(null);
+      },
+      () => {
+        if ($scope.results.length === streamers.length) {
+          $scope.title = 'TWITCH STREAMERS';
+        }
       }
     )
   }
