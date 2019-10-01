@@ -6,18 +6,32 @@
   </head>
 
 	<body ng-app='TwitchApp' ng-controller='myCtrl'>
-	  <div id='main'>
-	    <h1 title='Click to reload the list of the streamers' ng-click='reload()'>TWITCH STREAMERS</h1>
-	    <ul id='buttons'>
-	      <li id='all' ng-class='{active: allClick}' ng-click='all()'><div></div>All</li>
-	      <li id='online' ng-class='{active: onClick}' ng-click='online()'><div class='green'></div>Online</li>
-	      <li id='offline' ng-class='{active: offClick}' ng-click='offline()'><div class='lightBlue'></div>Offline</li>
+	  <div class='twitch'>
+	    <h1 class="twitch__header" title='Click to reload the list of the streamers' ng-click='reload()'>TWITCH STREAMERS</h1>
+	    <ul class='tabs'>
+	      <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "all"}' ng-click='activeTab = "all"'>
+			  <div class="tabs__icon"></div>
+			  All
+		  </li>
+	      <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "on"}' ng-click='activeTab = "on"'>
+			  <div class='tabs__icon tabs__icon_green'></div>
+			  Online
+		  </li>
+	      <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "off"}' ng-click='activeTab = "off"'>
+			  <div class='tabs__icon tabs__icon_blue'></div>
+			  Offline
+		  </li>
 	    </ul>
-	    <table rules='rows' border="1" bordercolor='white' ng-repeat="result in results | orderBy:'name'">
-	      <tr ng-class='{green: result.status!=="Offline"}' ng-show='allClick ? allClick : (onClick && result.status!=="Offline") ? onClick : (offClick && result.status=="Offline") ? offClick: false'>
-	        <td id='logo'><img ng-src="{{result.logo}}" alt='logo'></td>
-	        <td id='name'><a ng-href='{{result.href}}' target="_blank">{{result.name}}</a></td>
-	        <td id='status'>{{result.status}}</td>
+	    <table class="table" rules='rows' border="1" bordercolor='white' ng-repeat="result in results | orderBy:'name'">
+	      <tr ng-class='{table__item_green: result.status !== "Offline"}'
+			  ng-show='activeTab === "all" || (activeTab === "on" && result.status !== "Offline") || (activeTab === "off" && result.status === "Offline")'>
+	        <td class='table__logo'>
+				<img class="table__img" ng-src="{{result.logo}}" alt='logo'>
+			</td>
+	        <td class='table__name'>
+				<a class="table__href" ng-href='{{result.href}}' target="_blank">{{result.name}}</a>
+			</td>
+	        <td class='table__status'>{{result.status}}</td>
 	      </tr>
 	    </table>
 	  </div>

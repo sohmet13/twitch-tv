@@ -6,105 +6,93 @@ $darkBlue: #0E7CAA;
 body {
   background: $lightBlue;
 }
-#main {
+.twitch {
    margin: auto;
    background: $blue;
    max-width: 800px;
    min-width: 600px;
-   min-height: 120px;
    padding-bottom: 10px;
+  &__header {
+    font-size: 50px;
+    color: $moreLightBlue;
+    margin: 20px;
+    display: inline-block;
+    cursor: pointer;
+  }
 }
-h1 {
-  font-family: Oswald;
-  font-size: 50px;
-  color:$moreLightBlue;
-  margin: 20px;
-  float: left;
-  cursor: pointer;
-}
-#buttons {
+.tabs {
   float: right;
-  display: inline-block;
   display: flex;
   flex-direction:column;
   align-items:flex-end;
-  li {
+  &__item {
     list-style-type: none;
     background: $moreLightBlue;
-    font-color: $blue;
-    font-family: Oswald;
+    color: $blue;
     text-align: right;
     font-size: 0;
     margin: 2px 0;
     cursor: pointer;
     width:20px;
     height: 20px;
-    transition: width 0.5s;
-    &:hover {
-      width:80px;
-      animation-name: font;
-      animation-delay: 0.4s;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.5s;
+    &:hover, &_active {
+      width: 80px;
+      font-size: 15px;
     }
-    div {
-      margin: 4px;
-      float: left;
-      width:11px;
-      height: 11px;
-      border-radius:50%;
-      border: 1px solid $blue;
-      background:$blue;
-    } 
+  }
+  &__icon {
+    margin: 4px;
+    width:11px;
+    height: 11px;
+    border-radius:50%;
+    border: 1px solid $blue;
+    background:$blue;
+    &_green {
+      background: green;
+    }
+    &_blue {
+      background: $darkBlue;
+    }
   }
 }
-table {
+.table {
   width: 100%;
   color: white;
   background: $darkBlue;
   text-align:center;
-  #logo {
-    padding: 5px 0;
-    width: 80px; 
-    img {
-      width: 50px;
-      border-radius: 50px;
-      border: 2px solid white;
-    }
+  &__item_green {
+    background: green;
   }
-  #name {
+  &__logo {
+    padding: 5px 0;
+    width: 80px;
+  }
+  &__img {
+    width: 50px;
+    border-radius: 50px;
+    border: 2px solid white;
+    min-width: 50px;
+    min-height: 50px;
+  }
+  &__name {
     width: 150px;
     font-size: 15px;
-    a {
-      color:white;
-      text-decoration: none;
-    }
   }
-  #status {
+  &__href {
+    color:white;
+    text-decoration: none;
+  }
+  &__status {
     font-size: 15px;
     font-style: italic;
   }
 }
-.active {
-  width:80px !important;
-  animation-name: font;
-  animation-delay: 0.4s;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-}
-.green {
-  background: green !important;
-}
-.lightBlue {
-  background: $darkBlue !important;
-}
 
-@keyframes font {
-    0%   {font-size: 15px;}
-    100%   {font-size: 15px;}
-}
 @media (max-width: 700px) {
-  h1 {
+  .twitch__header {
     font-size: 40px;
   }
 }
