@@ -7,33 +7,35 @@
 
 	<body ng-app='TwitchApp' ng-controller='myCtrl'>
 	  <div class='twitch'>
-	    <h1 class="twitch__header" title='Click to reload the list of the streamers' ng-click='reload()'>{{title}}</h1>
-	    <ul class='tabs'>
-	      <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "all"}' ng-click='activeTab = "all"'>
-			  <div class="tabs__icon"></div>
-			  All
-		  </li>
-	      <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "on"}' ng-click='activeTab = "on"'>
-			  <div class='tabs__icon tabs__icon_green'></div>
-			  Online
-		  </li>
-	      <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "off"}' ng-click='activeTab = "off"'>
-			  <div class='tabs__icon tabs__icon_blue'></div>
-			  Offline
-		  </li>
-	    </ul>
-	    <table class="table" rules='rows' border="1" bordercolor='white' ng-repeat="result in results | orderBy:'name'">
-	      <tr ng-class='{table__item_green: result.status !== "Offline"}'
+		  <div class="header">
+			  <h1 class="header__title" title='Click to reload the list of the streamers' ng-click='reload()'>{{title}}</h1>
+			  <ul class='tabs'>
+				  <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "all"}' ng-click='activeTab = "all"'>
+					  <div class="tabs__icon"></div>
+					  All
+				  </li>
+				  <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "on"}' ng-click='activeTab = "on"'>
+					  <div class='tabs__icon tabs__icon_green'></div>
+					  Online
+				  </li>
+				  <li class='tabs__item' ng-class='{tabs__item_active: activeTab === "off"}' ng-click='activeTab = "off"'>
+					  <div class='tabs__icon tabs__icon_blue'></div>
+					  Offline
+				  </li>
+			  </ul>
+		  </div>
+		  <div ng-class='{user_green: result.status !== "Offline"}'
+			  ng-repeat="result in results "
+			  class="user"
 			  ng-show='result && (activeTab === "all" || (activeTab === "on" && result.status !== "Offline") || (activeTab === "off" && result.status === "Offline"))'>
-	        <td class='table__logo'>
-				<img class="table__img" ng-src="{{result.logo}}" alt='logo'>
-			</td>
-	        <td class='table__name'>
-				<a class="table__href" ng-href='{{result.href}}' target="_blank">{{result.name}}</a>
-			</td>
-	        <td class='table__status'>{{result.status}}</td>
-	      </tr>
-	    </table>
+			  <span class='user__logo'>
+				  <img class="user__img" ng-src="{{result.logo}}" alt='logo'>
+			  </span>
+			  <span class='user__name'>
+				  <a class="user__href" ng-href='{{result.href}}' target="_blank">{{result.name}}</a>
+			  </span>
+			  <span class='user__status'>{{result.status}}</span>
+	      </div>
 	  </div>
 	</body>
 </html>
