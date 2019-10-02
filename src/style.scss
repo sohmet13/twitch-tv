@@ -1,0 +1,122 @@
+$blue: #0C1b53;
+$lightBlue: #0CD4E1;
+$moreLightBlue: #35EBF6;
+$darkBlue: #0E7CAA;
+
+body {
+  background: $lightBlue;
+}
+.twitch {
+   margin: auto;
+   max-width: 800px;
+   min-width: 600px;
+}
+
+.header {
+  background: $blue;
+  display: flex;
+  justify-content: space-between;
+  &__title {
+    font-size: 50px;
+    color: $moreLightBlue;
+    margin: 25px;
+    cursor: pointer;
+  }
+}
+
+.tabs {
+  float: right;
+  display: flex;
+  flex-direction:column;
+  align-items:flex-end;
+  &__item {
+    list-style-type: none;
+    background: $moreLightBlue;
+    color: $blue;
+    text-align: right;
+    font-size: 0;
+    margin: 2px 0;
+    cursor: pointer;
+    width:20px;
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.5s;
+    &:hover, &_active {
+      width: 80px;
+      font-size: 15px;
+    }
+  }
+  &__icon {
+    margin: 4px;
+    width:11px;
+    height: 11px;
+    border-radius:50%;
+    border: 1px solid $blue;
+    background:$blue;
+    &_green {
+      background: green;
+    }
+    &_blue {
+      background: $darkBlue;
+    }
+  }
+}
+
+.user {
+  width: 100%;
+  color: white;
+  background: $darkBlue;
+  text-align:center;
+  border-bottom: 1px solid white;
+  border-top: 1px solid white;
+  display: flex;
+  align-items: center;
+  animation: new-item 0.3s ease-in-out forwards;
+  &_green {
+    background: green;
+  }
+ &__logo {
+    padding: 5px 0;
+    width: 10%;
+ }
+  &__img {
+    width: 50px;
+    border-radius: 50px;
+    border: 2px solid white;
+    min-width: 50px;
+    min-height: 50px;
+    display: inline-block;
+  }
+  &__name {
+    width: 20%;
+    font-size: 15px;
+  }
+  &__href {
+    color:white;
+    text-decoration: none;
+  }
+  &__status {
+    font-size: 15px;
+    font-style: italic;
+    width: 70%;
+  }
+}
+
+@media (max-width: 700px) {
+  .header__title {
+    font-size: 40px;
+    margin: 30px;
+  }
+}
+
+@keyframes new-item {
+  0% {
+    opacity: 0;
+    transform: translateY(2000px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
