@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/sohmet13/twitch-tv#readme",
   "dependencies": {
-    "angular": "^1.7.8",
+    "angular": "^1.8.0",
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
